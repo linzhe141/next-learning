@@ -3,7 +3,7 @@ import Nav from "@/components/layout/nav";
 import Content from "@/components/layout/content";
 import { useRouter } from "next/navigation";
 
-export default function Home() {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   return (
     <main className="flex h-screen flex-col">
@@ -19,7 +19,7 @@ export default function Home() {
       </div>
       <div className="flex flex-1 h-0 overflow-auto">
         <Nav />
-        <Content></Content>
+        <Content>{children}</Content>
       </div>
     </main>
   );
