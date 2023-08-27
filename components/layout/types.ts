@@ -5,12 +5,5 @@ export type NavItemProps = {
   expanded: boolean;
   expandChangeHandle?: (nav: NavItemProps) => void;
   children?: NavItemProps[];
-  navList:NavList[]
+  navList?: NavItemProps[];
 };
-export type NavList = {
-label: string;
-  url: string;
-  level: number;
-  expanded: boolean;
-  children?: NavList[];
-}

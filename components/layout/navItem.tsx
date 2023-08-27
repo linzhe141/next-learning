@@ -1,13 +1,17 @@
-import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { NavItemProps } from "./types";
+const Icon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24">
+    <path d="M8 4v16l8-8z" />
+  </svg>
+);
 export default function NavItem(props: NavItemProps) {
   const { label, url, level, children, expanded, expandChangeHandle, navList } =
     props;
-  // const [subNavheight, setSubNavHeight] = useState(getHeight() * 40);
-  const subNavheight = getHeight() * 40
   const router = useRouter();
-  function findNav(data: any[]) {
+  const pathname = usePathname();
+  const subNavheight = getHeight() * 40;
+  function findNav(data: NavItemProps[]): NavItemProps | null {
     for (const item of data) {
       if (item.url === url) {
         return item;
@@ -20,25 +24,27 @@ export default function NavItem(props: NavItemProps) {
     return null;
   }
   function getHeight() {
-    const target = findNav(navList);
+    const target = findNav(navList!);
     if (!target) return 0;
-    const foo = (data, result = []) => {
+    const getExpandedItems = (
+      data: NavItemProps[],
+      result: NavItemProps[] = []
+    ) => {
       for (const item of data) {
         if (item.expanded) {
           result.push(item);
         }
         if (Array.isArray(item.children)) {
-          foo(item.children, result);
+          getExpandedItems(item.children, result);
         }
       }
       return result;
     };
-    const x = foo(target.children ?? []).reduce(
-      (sum, item) => (sum += item.children.length),
-      0
-    );
+    const allExpanded = getExpandedItems(
+      (target.children ?? []).filter((item) => item.expanded)
+    ).reduce((sum, item) => (sum += item.children?.length ?? 0), 0);
 
-    return x + (target.children?.length ?? 0);
+    return allExpanded + (target.children?.length ?? 0);
   }
   const clickHandler = () => {
     if (children?.length) {
@@ -53,13 +59,25 @@ export default function NavItem(props: NavItemProps) {
   return (
     <div className="">
       <div
-        className="pr-4 hover:bg-green-200 cursor-pointer leading-10 flex justify-between"
+        className={`pr-4 hover:bg-green-200 cursor-pointer leading-10 flex justify-between items-center ${
+          pathname === url ? "text-orange-300" : "text-black"
+        } transition-all duration-300`}
         style={{ paddingLeft: 16 * level + "px" }}
         onClick={() => clickHandler()}
       >
         <div>{label}</div>
         {/* <div>{(children?.length ?? 0) > 0 ? "+" : ""}</div> */}
-        <div>{children?.length && (!expanded ? "+" : "-")}</div>
+        <div>
+          {children?.length && (
+            <div
+              className={`transition-all duration-300 ${
+                expanded ? "rotate-90" : ""
+              }`}
+            >
+              <Icon />
+            </div>
+          )}
+        </div>
       </div>
       <div
         style={{

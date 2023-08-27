@@ -1,9 +1,13 @@
 import NavItem from "./navItem";
-import { useState } from "react";
-import type { NavItemProps, NavList } from "./types";
-
-export default function Nav() {
-  const [menuList, setMenuList] = useState<NavList[]>([
+import { useState, useEffect } from "react";
+import type { NavItemProps } from "./types";
+import { usePathname } from "next/navigation";
+type Props = {
+  show: boolean
+}
+export default function Nav({show}:Props) {
+  const pathname = usePathname();
+  const menuData = [
     {
       label: "test1",
       url: "/test/1",
@@ -56,11 +60,9 @@ export default function Nav() {
     },
     { label: "test2", url: "/test/2", level: 1, expanded: false },
     { label: "test3", url: "/test/3", level: 1, expanded: false },
-  ]);
-  // for (let i = 1; i <= 100; i++) {
-  //   menuList.push({ label: "test" + i, url: "/test" + i, level: 1 });
-  // }
-
+  ];
+  console.log(menuData);
+  const [menuList, setMenuList] = useState(menuData);
   const expandChangeHandle = (nav: NavItemProps) => {
     function foo(data: any) {
       const temp: any = {};
@@ -78,15 +80,40 @@ export default function Nav() {
     }
 
     setMenuList(menuList.map(foo));
-    console.log(menuList.map(foo));
   };
+  function setDefaultData(
+    data: NavItemProps[],
+    parentNode: NavItemProps | null = null
+  ) {
+    for (const item of data) {
+      // 先进行递归，再从叶子节点一层层出来
+      if (Array.isArray(item.children)) {
+        setDefaultData(item.children, item);
+      }
+      if (item.url === pathname) {
+        if (parentNode) {
+          parentNode.expanded = true;
+        }
+      }
+      if (item.children?.find((it) => it.expanded)) {
+        item.expanded = true;
+      }
+    }
+    // if (parentNode) parentNode.expanded = flag;
+    return data;
+  }
+  useEffect(() => {
+    setMenuList(setDefaultData(JSON.parse(JSON.stringify(menuData))));
+    // setMenuList(setDefaultData(menuData));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
-    <div className="w-50 bg-green-300 overflow-auto">
+    <div className={`lg:w-[200px] lg:static bg-green-300 overflow-auto sm:fixed sm:top-0 sm:w-[200px] sm:bottom-0 ${show ? 'sm:left-0':'sm:left-[-200px]'} w-0 transition-all duration-300`}>
       {menuList.map((menu) => (
         <NavItem
           {...menu}
           key={menu.url}
-          navList={menuList}
+          navList={menuList as NavItemProps[]}
           expandChangeHandle={expandChangeHandle}
         />
       ))}
