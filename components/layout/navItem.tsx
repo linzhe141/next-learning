@@ -1,10 +1,7 @@
 import { usePathname } from 'next/navigation'
 import { NavItemProps } from './types'
-const Icon = () => (
-  <svg width='12' height='12' viewBox='0 0 24 24'>
-    <path d='M8 4v16l8-8z' />
-  </svg>
-)
+import Icon from '../icon/Icon'
+
 export default function NavItem(props: NavItemProps) {
   const {
     label,
@@ -64,7 +61,7 @@ export default function NavItem(props: NavItemProps) {
     <div className=''>
       <div
         className={`flex cursor-pointer items-center justify-between pr-4 leading-10 hover:bg-green-200 ${
-          pathname === url ? 'text-orange-300' : 'text-black'
+          pathname === url ? 'text-green-400' : ''
         } transition-all duration-300`}
         style={{ paddingLeft: 16 * level + 'px' }}
         onClick={() => clickHandler()}
@@ -77,7 +74,7 @@ export default function NavItem(props: NavItemProps) {
                 expanded ? 'rotate-90' : ''
               }`}
             >
-              <Icon />
+              <Icon type='triangle' />
             </div>
           )}
         </div>

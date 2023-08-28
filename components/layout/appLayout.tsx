@@ -3,23 +3,42 @@ import Nav from '@/components/layout/nav'
 import Content from '@/components/layout/content'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import Icon from '../icon/Icon'
+import { getNavList } from './api'
+import { NavData } from './types'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [showNav, setShowNav] = useState(false)
-  function resizeHandle() {
-    setShowNav(false)
+  const [navList, setNavList] = useState<NavData[]>([])
+  async function init() {
+    const data = await getNavList()
+    setNavList(formatNavList(data))
   }
-  function beforeJumpHandle() {
+  function formatNavList(data: NavData[], level = 1) {
+    for (const item of data) {
+      item.level = level
+      item.expanded = false
+      if (item.children) {
+        formatNavList(item.children, item.level + 1)
+      }
+    }
+    return data
+  }
+  function closeNav() {
     if (showNav) {
       setShowNav(false)
     }
   }
+  function resizeHandle() {
+    closeNav()
+  }
+  function beforeJumpHandle() {
+    closeNav()
+  }
   function keydownHandle(event: KeyboardEvent) {
     if (event.key === 'Escape') {
-      if (showNav) {
-        setShowNav(false)
-      }
+      closeNav()
     }
   }
   useEffect(() => {
@@ -30,9 +49,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       window.removeEventListener('keydown', keydownHandle)
     }
   }, [showNav])
+  useEffect(() => {
+    init()
+  }, [])
   return (
     <main className='flex h-screen flex-col'>
-      <div className='flex h-10 items-center justify-between bg-gray-500 px-2 '>
+      <div className='flex h-10 items-center justify-between border-b-[1px] px-2'>
         <span>linzhe-blog</span>
         <button
           type='button'
@@ -42,33 +64,30 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           home
         </button>
       </div>
-      <div className='flex h-10 items-center overflow-hidden border-y-[1px] px-2 lg:h-0 lg:border-y-0'>
+      <div className='flex h-10 items-center overflow-hidden border-b-[1px] px-2 lg:h-0 lg:border-b-0'>
         <div
           className='flex cursor-pointer items-center'
           onClick={() => setShowNav(true)}
         >
-          <svg width='20' height='20' viewBox='0 0 20 20' fill='none'>
-            <rect x='2' y='7' width='11' height='2' fill='#606266'></rect>
-            <rect x='2' y='11' width='14' height='2' fill='#606266'></rect>
-            <rect x='2' y='15' width='8' height='2' fill='#606266'></rect>
-            <rect x='2' y='3' width='16' height='2' fill='#606266'></rect>
-          </svg>
+          <Icon type='menu' />
           <span className='ml-2'>Menu</span>
         </div>
-        {/* <div
-          onClick={() => setShowNav(false)}
-          className={`bottom-0 left-0 right-0 top-0 cursor-pointer transition-all duration-300 ${
-            showNav ? 'fixed bg-gray-400 bg-opacity-60' : 'static'
-          }`}
-        ></div> */}
       </div>
       <div className='flex h-0 flex-1 overflow-auto'>
         <div
-          className={`fixed bottom-0 top-0  overflow-auto bg-green-300 lg:static lg:w-[200px] ${
+          className={`fixed bottom-0 top-0  overflow-auto border-r-[1px] bg-white lg:static lg:w-[200px] ${
             showNav ? 'left-0 right-0' : 'left-[-200px]'
           } transition-[left] duration-300`}
         >
-          <Nav beforeJump={beforeJumpHandle} />
+          <div className='flex flex-row-reverse px-4 py-2 lg:hidden'>
+            <div
+              onClick={closeNav}
+              className='cursor-pointer rounded-full p-1 transition-all duration-200 hover:rotate-90 hover:bg-slate-100'
+            >
+              <Icon type='close' />
+            </div>
+          </div>
+          <Nav beforeJump={beforeJumpHandle} data={navList} />
         </div>
         <Content>{children}</Content>
       </div>
