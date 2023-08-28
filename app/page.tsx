@@ -5,14 +5,9 @@ export default function Home() {
   return (
     <div className='flex h-screen items-center justify-center bg-green-400'>
       <div className='flex flex-col items-center justify-center'>
-        <h1 className='text-4xl'>blog</h1>
-        <button
-          type='button'
-          onClick={() => router.push('/blog/1-2-3-1')}
-          className='mt-4 rounded bg-red-100 px-2 text-gray-600 hover:bg-red-200 hover:text-gray-800'
-        >
+        <h1 className='text-9xl cursor-pointer' onClick={() => router.push('/blog/1-2-3-1')}>
           blog
-        </button>
+        </h1>
       </div>
     </div>
   )

@@ -8,22 +8,23 @@ export default function Nav({ beforeJump, data }: NavPros) {
   const router = useRouter()
   const [navList, setNavList] = useState(data as unknown as NavItemProps[])
   const expandChangeHandle = (nav: NavItemProps) => {
-    function foo(data: any) {
-      const temp: any = {}
-      temp.label = data.label
-      temp.url = data.url
-      temp.level = data.level
-      temp.expanded = data.expanded
+    // TODO 使用useImmer
+    function setExpanded(data: any) {
+      const result: any = {}
+      result.label = data.label
+      result.url = data.url
+      result.level = data.level
+      result.expanded = data.expanded
       if (data.url === nav.url) {
-        temp.expanded = !data.expanded
+        result.expanded = !data.expanded
       }
       if (Array.isArray(data.children)) {
-        temp.children = data.children.map(foo)
+        result.children = data.children.map(setExpanded)
       }
-      return temp
+      return result
     }
 
-    setNavList(navList.map(foo))
+    setNavList(navList.map(setExpanded))
   }
   const clickHandle = (nav: NavItemProps) => {
     router.push(nav.url)
@@ -51,8 +52,8 @@ export default function Nav({ beforeJump, data }: NavPros) {
   }
 
   useEffect(() => {
-    setNavList(setDefaultData(JSON.parse(JSON.stringify(data))))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setNavList(setDefaultData(data as unknown as NavItemProps[]))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   return (

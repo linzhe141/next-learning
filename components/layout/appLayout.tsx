@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import Icon from '../icon/Icon'
 import { getNavList } from './api'
 import { NavData } from './types'
+import Image from 'next/image'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -54,15 +55,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [])
   return (
     <main className='flex h-screen flex-col'>
-      <div className='flex h-10 items-center justify-between border-b-[1px] px-2'>
-        <span>linzhe-blog</span>
-        <button
-          type='button'
+      <div className='flex items-center justify-between border-b-[1px] p-4'>
+        <span
+          className='flex cursor-pointer items-center'
           onClick={() => router.push('/')}
-          className=' rounded bg-red-100 px-2 text-gray-600 hover:bg-red-200 hover:text-gray-800'
+        >
+          <Image
+            className='mr-2'
+            width={24}
+            height={24}
+            src={'/logo.jpg'}
+            alt='logo'
+          />
+          <span>linzhe-blog</span>
+        </span>
+        <span
+          onClick={() => router.push('/')}
+          className='cursor-pointer px-2 text-green-400 '
         >
           home
-        </button>
+        </span>
       </div>
       <div className='flex h-10 items-center overflow-hidden border-b-[1px] px-2 lg:h-0 lg:border-b-0'>
         <div
