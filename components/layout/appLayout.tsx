@@ -1,63 +1,77 @@
-"use client";
-import Nav from "@/components/layout/nav";
-import Content from "@/components/layout/content";
-import { useRouter } from "next/navigation";
-import { useState,useEffect } from "react";
+'use client'
+import Nav from '@/components/layout/nav'
+import Content from '@/components/layout/content'
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const [showNav, setShowNav] = useState(false);
-  function resizeHandle (){
+  const router = useRouter()
+  const [showNav, setShowNav] = useState(false)
+  function resizeHandle() {
     setShowNav(false)
   }
-  useEffect(()=>{
-    window.addEventListener('resize', resizeHandle)
-    return ()=>{
-    window.removeEventListener('resize', resizeHandle)
+  function beforeJumpHandle() {
+    if (showNav) {
+      setShowNav(false)
     }
-  },[])
+  }
+  function keydownHandle(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      if (showNav) {
+        setShowNav(false)
+      }
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('resize', resizeHandle)
+    window.addEventListener('keydown', keydownHandle)
+    return () => {
+      window.removeEventListener('resize', resizeHandle)
+      window.removeEventListener('keydown', keydownHandle)
+    }
+  }, [showNav])
   return (
-    <main className="flex h-screen flex-col">
-      <div className="h-10 flex items-center justify-between px-2 bg-gray-500 ">
+    <main className='flex h-screen flex-col'>
+      <div className='flex h-10 items-center justify-between bg-gray-500 px-2 '>
         <span>linzhe-blog</span>
         <button
-          type="button"
-          onClick={() => router.push("/login")}
-          className=" px-2 rounded text-gray-600 bg-red-100 hover:bg-red-200 hover:text-gray-800"
+          type='button'
+          onClick={() => router.push('/')}
+          className=' rounded bg-red-100 px-2 text-gray-600 hover:bg-red-200 hover:text-gray-800'
         >
-          logout!
+          home
         </button>
       </div>
-      <div className="h-10 lg:h-0 overflow-hidden border-y-2 flex px-2 items-center">
+      <div className='flex h-10 items-center overflow-hidden border-y-[1px] px-2 lg:h-0 lg:border-y-0'>
         <div
-          className="flex items-center cursor-pointer"
+          className='flex cursor-pointer items-center'
           onClick={() => setShowNav(true)}
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect x="2" y="7" width="11" height="2" fill="#606266"></rect>
-            <rect x="2" y="11" width="14" height="2" fill="#606266"></rect>
-            <rect x="2" y="15" width="8" height="2" fill="#606266"></rect>
-            <rect x="2" y="3" width="16" height="2" fill="#606266"></rect>
+          <svg width='20' height='20' viewBox='0 0 20 20' fill='none'>
+            <rect x='2' y='7' width='11' height='2' fill='#606266'></rect>
+            <rect x='2' y='11' width='14' height='2' fill='#606266'></rect>
+            <rect x='2' y='15' width='8' height='2' fill='#606266'></rect>
+            <rect x='2' y='3' width='16' height='2' fill='#606266'></rect>
           </svg>
-          <span className="ml-2">Menu</span>
+          <span className='ml-2'>Menu</span>
         </div>
-        <div
+        {/* <div
           onClick={() => setShowNav(false)}
-          className={`cursor-pointer top-0 bottom-0 left-0 right-0 transition-all duration-300 ${
-            showNav ? "fixed bg-gray-400 bg-opacity-60" : "static"
+          className={`bottom-0 left-0 right-0 top-0 cursor-pointer transition-all duration-300 ${
+            showNav ? 'fixed bg-gray-400 bg-opacity-60' : 'static'
           }`}
-        ></div>
+        ></div> */}
       </div>
-      <div className="flex flex-1 h-0 overflow-auto">
-        <Nav show={showNav} />
+      <div className='flex h-0 flex-1 overflow-auto'>
+        <div
+          className={`fixed bottom-0 top-0  overflow-auto bg-green-300 lg:static lg:w-[200px] ${
+            showNav ? 'left-0 right-0' : 'left-[-200px]'
+          } transition-[left] duration-300`}
+        >
+          <Nav beforeJump={beforeJumpHandle} />
+        </div>
         <Content>{children}</Content>
       </div>
     </main>
-  );
+  )
 }

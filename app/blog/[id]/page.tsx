@@ -3,5 +3,5 @@ export default function Test({ params }: { params: { id: string } }) {
     <div>
       <div>My Post: {params.id}</div>
     </div>
-  );
+  )
 }
