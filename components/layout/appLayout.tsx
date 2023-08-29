@@ -4,28 +4,13 @@ import Content from '@/components/layout/content'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import Icon from '../icon/Icon'
-import { getNavList } from './api'
-import { NavData } from './types'
 import Image from 'next/image'
-
+import Underline from '../underline'
+import { useStore } from '@/store/store'
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [showNav, setShowNav] = useState(false)
-  const [navList, setNavList] = useState<NavData[]>([])
-  async function init() {
-    const data = await getNavList()
-    setNavList(formatNavList(data))
-  }
-  function formatNavList(data: NavData[], level = 1) {
-    for (const item of data) {
-      item.level = level
-      item.expanded = false
-      if (item.children) {
-        formatNavList(item.children, item.level + 1)
-      }
-    }
-    return data
-  }
+  const navList = useStore((state) => state.navList)
   function closeNav() {
     if (showNav) {
       setShowNav(false)
@@ -49,32 +34,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       window.removeEventListener('resize', resizeHandle)
       window.removeEventListener('keydown', keydownHandle)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showNav])
-  useEffect(() => {
-    init()
-  }, [])
   return (
     <main className='flex h-screen flex-col'>
       <div className='flex items-center justify-between border-b-[1px] p-4'>
-        <span
-          className='flex cursor-pointer items-center'
-          onClick={() => router.push('/')}
-        >
-          <Image
-            className='mr-2'
-            width={24}
-            height={24}
-            src={'/logo.jpg'}
-            alt='logo'
-          />
-          <span>linzhe-blog</span>
-        </span>
-        <span
-          onClick={() => router.push('/')}
-          className='cursor-pointer px-2 text-green-400 '
-        >
-          home
-        </span>
+        <div>
+          <Underline>
+            <div
+              className=' flex items-center'
+              onClick={() => router.push('/')}
+            >
+              <Image
+                className='mr-2'
+                width={24}
+                height={24}
+                src={'/logo.jpg'}
+                alt='logo'
+              />
+              <span>linzhe-blog</span>
+            </div>
+          </Underline>
+        </div>
+
+        <div>
+          <Underline>
+            <span onClick={() => router.push('/')}>home</span>
+          </Underline>
+        </div>
       </div>
       <div className='flex h-10 items-center overflow-hidden border-b-[1px] px-2 lg:h-0 lg:border-b-0'>
         <div
@@ -94,7 +81,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className='flex flex-row-reverse px-4 py-2 lg:hidden'>
             <div
               onClick={closeNav}
-              className='cursor-pointer rounded-full p-1 transition-all duration-200 hover:rotate-90 hover:bg-slate-100'
+              className='cursor-pointer rounded-full p-1 transition-all duration-200 hover:rotate-90 hover:bg-green-100'
             >
               <Icon type='close' />
             </div>

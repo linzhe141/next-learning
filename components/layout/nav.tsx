@@ -1,58 +1,68 @@
 import NavItem from './navItem'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import type { NavItemProps, NavPros } from './types'
 import { usePathname, useRouter } from 'next/navigation'
-
+import { useImmer } from 'use-immer'
 export default function Nav({ beforeJump, data }: NavPros) {
   const pathname = usePathname()
   const router = useRouter()
-  const [navList, setNavList] = useState(data as unknown as NavItemProps[])
-  const expandChangeHandle = (nav: NavItemProps) => {
-    // TODO 使用useImmer
-    function setExpanded(data: any) {
-      const result: any = {}
-      result.label = data.label
-      result.url = data.url
-      result.level = data.level
-      result.expanded = data.expanded
-      if (data.url === nav.url) {
-        result.expanded = !data.expanded
-      }
-      if (Array.isArray(data.children)) {
-        result.children = data.children.map(setExpanded)
-      }
-      return result
-    }
+  const [navList, setNavList] = useImmer(data as unknown as NavItemProps[])
 
-    setNavList(navList.map(setExpanded))
-  }
-  const clickHandle = (nav: NavItemProps) => {
-    router.push(nav.url)
-    beforeJump && beforeJump()
-  }
-  function setDefaultData(
-    data: NavItemProps[],
-    parentNode: NavItemProps | null = null
-  ) {
+  function setExpanded(data: NavItemProps[], nav: NavItemProps) {
     for (const item of data) {
-      // 先进行递归，再从叶子节点一层层出来
-      if (Array.isArray(item.children)) {
-        setDefaultData(item.children, item)
+      if (item.url === nav.url) {
+        item.expanded = !item.expanded
       }
-      if (item.url === pathname) {
-        if (parentNode) {
-          parentNode.expanded = true
-        }
-      }
-      if (item.children?.find((it) => it.expanded)) {
-        item.expanded = true
+      if (item.children) {
+        setExpanded(item.children, nav)
       }
     }
     return data
   }
+  function expandChangeHandle(nav: NavItemProps) {
+    setNavList((draft) => {
+      setExpanded(draft, nav)
+    })
+  }
+  function clickHandle(nav: NavItemProps) {
+    router.push(nav.url)
+    beforeJump && beforeJump()
+  }
+  function setDefaultData(
+    data: NavItemProps,
+    parentNode: NavItemProps | null = null,
+    level: number = 1
+  ) {
+    //! immutable copy
+    const result = { ...data }
+    result.expanded = false
+    result.level = level
+    //! 先进行递归，再从叶子节点一层层出来
+    if (result.children) {
+      //! immutable copy
+      result.children = result.children.map((item) =>
+        setDefaultData(item, result, result.level + 1)
+      )
+    }
+    if (result.url === pathname) {
+      if (parentNode) {
+        parentNode.expanded = true
+      }
+    }
+    if (result.children?.find((it) => it.expanded)) {
+      result.expanded = true
+    }
+    return result
+  }
 
   useEffect(() => {
-    setNavList(setDefaultData(data as unknown as NavItemProps[]))
+    //! immutable
+    const defaultData = (data as unknown as NavItemProps[]).map((item) =>
+      setDefaultData(item)
+    )
+    setNavList(defaultData)
+    //! error not immutable
+    // setNavList(setDefaultData(data as unknown as NavItemProps[]))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 

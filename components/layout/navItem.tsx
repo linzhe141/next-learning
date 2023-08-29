@@ -20,7 +20,7 @@ export default function NavItem(props: NavItemProps) {
       if (item.url === url) {
         return item
       }
-      if (Array.isArray(item.children)) {
+      if (item.children) {
         const target = findNav(item.children)
         if (target) return target
       }
@@ -38,7 +38,7 @@ export default function NavItem(props: NavItemProps) {
         if (item.expanded) {
           result.push(item)
         }
-        if (Array.isArray(item.children)) {
+        if (item.children) {
           getExpandedItems(item.children, result)
         }
       }
@@ -50,7 +50,7 @@ export default function NavItem(props: NavItemProps) {
 
     return allExpanded + (target.children?.length ?? 0)
   }
-  const clickHandler = () => {
+  function clickHandler() {
     if (children?.length) {
       expandChangeHandle && expandChangeHandle(props)
     } else {
