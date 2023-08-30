@@ -1,5 +1,4 @@
 'use client'
-import { getNavList } from '@/app/api'
 import { usePathname } from 'next/navigation'
 import AppLayout from '@/components/layout/appLayout'
 import { useEffect } from 'react'
@@ -10,8 +9,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const setNavList = useStore((state) => state.setNavList)
 
   async function init() {
-    const data = await getNavList()
-    setNavList(data)
+    const data = await (await fetch('/api/nav')).json()
+    setNavList(data.data)
   }
   useEffect(() => {
     init()

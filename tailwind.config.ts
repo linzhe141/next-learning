@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-
+import typography from '@tailwindcss/typography'
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -8,15 +8,30 @@ const config: Config = {
     './mdx-components.tsx',
   ],
   theme: {
-    extend: {},
+    extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            code: {
+              padding: '2px 4px',
+              backgroundColor: 'red',
+              color: 'white',
+              '&::before': {
+                display: 'none',
+              },
+              '&::after': {
+                display: 'none',
+              },
+            },
+          },
+        },
+      },
+    },
     hljs: {
       theme: 'atom-one-dark',
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    require('tailwind-highlightjs'),
-  ],
+  plugins: [typography, require('tailwind-highlightjs')],
   safelist: [
     {
       pattern: /hljs+/,
