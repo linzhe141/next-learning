@@ -12,10 +12,16 @@ const config: Config = {
       typography: {
         DEFAULT: {
           css: {
+            a: {
+              textDecoration: 'underline dotted',
+              textUnderlineOffset: '2px',
+              color: '#4565d8',
+              '&:hover': {},
+            },
             code: {
               padding: '2px 4px',
               backgroundColor: 'red',
-              color: 'white',
+              color: 'white !important',
               '&::before': {
                 display: 'none',
               },
