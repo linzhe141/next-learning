@@ -74,21 +74,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
       <div className='flex h-0 flex-1 overflow-auto'>
         <div
-          className={`fixed bottom-0 top-0  overflow-auto border-r-[1px] bg-white lg:static lg:w-[200px] ${
-            showNav ? 'left-0 right-0' : 'left-[-200px]'
+          className={`fixed bottom-0 top-0 z-[1] overflow-auto border-r-[1px] bg-white lg:static lg:min-w-[300px] lg:px-[50px] ${
+            showNav ? 'left-0 right-0' : 'left-[-300px] '
           } transition-[left] duration-300`}
         >
           <div className='flex flex-row-reverse px-4 py-2 lg:hidden'>
             <div
               onClick={closeNav}
-              className='cursor-pointer rounded-full p-1 transition-all duration-200 hover:rotate-90 hover:bg-green-100'
+              className='cursor-pointer rounded-full p-1 transition-all duration-200 hover:rotate-90 hover:bg-green-100 hover:text-green-400'
             >
               <Icon type='close' />
             </div>
           </div>
           <Nav beforeJump={beforeJumpHandle} data={navList} />
         </div>
-        <Content>{children}</Content>
+        <div className='flex-1 overflow-auto p-5 lg:pr-[300px]'>
+          <Content>{children}</Content>
+        </div>
+        <div
+          className={`hidden bg-white lg:fixed lg:bottom-0 lg:right-[20px] lg:top-[57px] lg:block lg:w-[280px] lg:border-l-[1px] lg:px-[50px]`}
+        ></div>
       </div>
     </main>
   )

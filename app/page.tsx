@@ -6,13 +6,20 @@ import { NavData } from '@/components/layout/types'
 export default function Home() {
   const router = useRouter()
   const navList = useStore((state) => state.navList)
+  // function getDefaultUrl(data: NavData[]) {
+  //   if (data.length) {
+  //     const target = data[0]
+  //     if (!target.children || target.children?.length === 0) return target.url
+  //     if (target.children) {
+  //       return getDefaultUrl(target.children)
+  //     }
+  //   }
+  //   return null
+  // }
   function getDefaultUrl(data: NavData[]) {
     if (data.length) {
       const target = data[0]
-      if (!target.children || target.children?.length === 0) return target.url
-      if (target.children) {
-        return getDefaultUrl(target.children)
-      }
+      return target.url
     }
     return null
   }

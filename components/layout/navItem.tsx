@@ -1,6 +1,7 @@
 import { usePathname } from 'next/navigation'
 import { NavItemProps } from './types'
 import Icon from '../icon/Icon'
+import Underline from '../underline'
 
 export default function NavItem(props: NavItemProps) {
   const {
@@ -51,26 +52,28 @@ export default function NavItem(props: NavItemProps) {
     return allExpanded + (target.children?.length ?? 0)
   }
   function clickHandler() {
-    if (children?.length) {
-      expandChangeHandle && expandChangeHandle(props)
-    } else {
-      clickHandle && clickHandle(props)
-    }
+    clickHandle && clickHandle(props)
   }
   return (
     <div className=''>
       <div
-        className={`flex cursor-pointer items-center justify-between pr-4 leading-10 hover:bg-green-200 ${
+        className={`flex cursor-pointer items-center justify-between pr-4 leading-10 ${
           pathname === url ? 'text-green-400' : ''
         } transition-all duration-300`}
         style={{ paddingLeft: 16 * level + 'px' }}
         onClick={() => clickHandler()}
       >
-        <div>{label}</div>
+        <Underline offset={-8}>
+          <div>{label}</div>
+        </Underline>
         <div>
-          {children?.length && (
+          {(children?.length ?? 0) > 0 && (
             <div
-              className={`transition-all duration-300 ${
+              onClick={(e) => {
+                e.stopPropagation()
+                expandChangeHandle && expandChangeHandle(props)
+              }}
+              className={`flex h-4 w-4 items-center justify-center p-4 text-green-400 transition-all duration-300 ${
                 expanded ? 'rotate-90' : ''
               }`}
             >

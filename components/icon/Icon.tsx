@@ -1,6 +1,6 @@
 const iconMap = {
   close: (
-    <svg width={24} height={24} viewBox='0 0 24 24'>
+    <svg width={24} height={24} viewBox='0 0 24 24' className='fill-current'>
       <path
         fillRule='evenodd'
         clipRule='evenodd'
@@ -9,7 +9,7 @@ const iconMap = {
     </svg>
   ),
   menu: (
-    <svg width={20} height={20} viewBox='0 0 20 20'>
+    <svg width={20} height={20} viewBox='0 0 20 20' className='fill-current'>
       <rect x='2' y='7' width='11' height='2' fill='#606266'></rect>
       <rect x='2' y='11' width='14' height='2' fill='#606266'></rect>
       <rect x='2' y='15' width='8' height='2' fill='#606266'></rect>
@@ -17,7 +17,7 @@ const iconMap = {
     </svg>
   ),
   triangle: (
-    <svg width={12} height={12} viewBox='0 0 24 24'>
+    <svg width={16} height={16} viewBox='0 0 24 24' className='fill-current'>
       <path d='M8 4v16l8-8z' />
     </svg>
   ),
