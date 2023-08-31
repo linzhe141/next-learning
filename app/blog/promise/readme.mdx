@@ -1,3 +1,6 @@
+import React from 'react'
+import Underline from '@/components/underline'
+
 # Promise/A+ 笔记
 
 根据[Promises/A+中文官网](https://promisesaplus.com.cn)，进行了简单的总结，本文的 `promise` 没有特别强调的情况下，都是指代码演示中 `new Promise 的实例`
@@ -24,7 +27,7 @@ new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(100)
         }, 1000 * 10)
-      }),
+      })
     )
   }).then((res) => {
     // 十秒后输出 res1 100
@@ -37,7 +40,7 @@ new Promise((resolve, reject) => {
         setTimeout(() => {
           reject(100)
         }, 1000 * 10)
-      }),
+      })
     )
   }).then(
     // 不会执行
@@ -47,7 +50,7 @@ new Promise((resolve, reject) => {
     (error) => {
       // 十秒后输出 error 100
       console.log('error', error)
-    },
+    }
   )
   ```
 
@@ -73,7 +76,7 @@ new Promise((resolve, reject) => {
         get() {
           throw 1
         },
-      }),
+      })
     )
   }).then(
     // 不会执行
@@ -83,7 +86,7 @@ new Promise((resolve, reject) => {
     (e) => {
       // 输出 error 1
       console.log('error', e)
-    },
+    }
   )
 
   new Promise((resolve) => {
@@ -152,7 +155,7 @@ promise2 = promise.then(onFulfilled, onRejected)
     (error) => {
       // 输出 error 100
       console.log('error', error)
-    },
+    }
   )
   ```
 
@@ -175,7 +178,7 @@ promise2 = promise.then(onFulfilled, onRejected)
         // 输出 error 100
         console.log('error', error)
         // [[Resolve]](promise2, x:undefined)
-      },
+      }
     )
     .then(
       (res) => {
@@ -186,7 +189,7 @@ promise2 = promise.then(onFulfilled, onRejected)
       // 这个不会执行
       (error) => {
         console.log('error', error)
-      },
+      }
     )
   ```
 
@@ -198,7 +201,7 @@ promise2 = promise.then(onFulfilled, onRejected)
     resolve(
       new Promise((resolve) => {
         resolve('xxxxxxx')
-      }),
+      })
     )
   }).then(
     (res) => {
@@ -208,14 +211,14 @@ promise2 = promise.then(onFulfilled, onRejected)
     // 不会执行
     (error) => {
       console.log('error', error)
-    },
+    }
   )
   //! 如果 promise 拒绝了 x，并且这个 x 是一个新的 promise
   new Promise((resolve, reject) => {
     reject(
       new Promise((resolve) => {
         resolve('xxxxxxx')
-      }),
+      })
     )
   }).then(
     // 不会执行
@@ -226,7 +229,7 @@ promise2 = promise.then(onFulfilled, onRejected)
       // 这个error就是拒绝的原因，就是那个新的promise
       // 输出 error reject的promise
       console.log('error', error)
-    },
+    }
   )
   ```
 

@@ -13,8 +13,8 @@ const config: Config = {
         DEFAULT: {
           css: {
             a: {
-              textDecoration: 'none',
-              color: '#4565d8',
+              textDecoration: 'underline dotted',
+              color: 'rgba(74, 222, 128,1)',
               '&:hover': {},
             },
             code: {
