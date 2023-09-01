@@ -1,7 +1,8 @@
 'use client'
 import Nav from '@/components/layout/nav'
+import ReadmeDir from '@/components/readmeDir'
 import Content from '@/components/layout/content'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import Icon from '../icon/Icon'
 import Image from 'next/image'
@@ -11,6 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [showNav, setShowNav] = useState(false)
   const navList = useStore((state) => state.navList)
+  const pathname = usePathname()
   function closeNav() {
     if (showNav) {
       setShowNav(false)
@@ -93,7 +95,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
         <div
           className={`hidden bg-white lg:fixed lg:bottom-0 lg:right-[20px] lg:top-[57px] lg:block lg:w-[280px] lg:border-l-[1px] lg:px-[50px]`}
-        ></div>
+        >
+          <ReadmeDir url={pathname} />
+        </div>
       </div>
     </main>
   )

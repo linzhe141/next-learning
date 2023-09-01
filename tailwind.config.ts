@@ -12,6 +12,7 @@ const config: Config = {
       typography: {
         DEFAULT: {
           css: {
+            // 限定在 .prose 类名下的 a 元素
             a: {
               textDecoration: 'underline dotted',
               color: 'rgba(74, 222, 128,1)',
