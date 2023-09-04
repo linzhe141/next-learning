@@ -65,7 +65,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </Underline>
         </div>
       </div>
-      <div className='flex h-10 items-center overflow-hidden border-b-[1px] px-2 lg:h-0 lg:border-b-0'>
+      <div className='flex h-10 items-center overflow-hidden border-b-[1px] px-2 xl:h-0 xl:border-b-0'>
         <div
           className='flex cursor-pointer items-center'
           onClick={() => setShowNav(true)}
@@ -76,11 +76,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
       <div className='flex h-0 flex-1 overflow-auto'>
         <div
-          className={`fixed bottom-0 top-0 z-[1] overflow-auto border-r-[1px] bg-white lg:static lg:min-w-[300px] lg:px-[50px] ${
+          className={`fixed bottom-0 top-0 z-[1] overflow-auto border-r-[1px] bg-white xl:static xl:min-w-[300px] xl:px-[50px] ${
             showNav ? 'left-0 right-0' : 'left-[-300px] '
           } transition-[left] duration-300`}
         >
-          <div className='flex flex-row-reverse px-4 py-2 lg:hidden'>
+          <div className='flex flex-row-reverse px-4 py-2 xl:hidden'>
             <div
               onClick={closeNav}
               className='cursor-pointer rounded-full p-1 transition-all duration-200 hover:rotate-90 hover:bg-green-100 hover:text-green-400'
@@ -88,16 +88,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <Icon type='close' />
             </div>
           </div>
-          <div className='mb-4 hidden lg:block'></div>
+          <div className='mb-4 hidden xl:block'></div>
           <Nav beforeJump={beforeJumpHandle} data={navList} />
         </div>
-        <div className='flex-1 overflow-auto p-5 lg:pr-[300px]'>
+        <div className='flex-1 overflow-auto p-5 xl:pr-[300px]'>
           <Content>{children}</Content>
         </div>
         <div
-          className={`hidden bg-white lg:fixed lg:bottom-0 lg:right-[20px] lg:top-[57px] lg:block lg:w-[280px] lg:border-l-[1px] lg:px-[50px]`}
+          className={`hidden bg-white xl:fixed xl:bottom-0 xl:right-[20px] xl:top-[57px] xl:block xl:w-[280px] xl:border-l-[1px] xl:px-[50px]`}
         >
-          <div className='mb-4 hidden lg:block'></div>
+          <div className='mb-4 hidden xl:block'></div>
           <ReadmeDir url={pathname} />
         </div>
       </div>
