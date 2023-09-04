@@ -2,7 +2,7 @@ import { usePathname } from 'next/navigation'
 import { NavItemProps } from './types'
 import Icon from '../icon/Icon'
 import Underline from '../underline'
-
+// 虽然是递归组件，但是如果多余两层实在太丑了
 export default function NavItem(props: NavItemProps) {
   const {
     label,
@@ -55,12 +55,14 @@ export default function NavItem(props: NavItemProps) {
     clickHandle && clickHandle(props)
   }
   return (
-    <div className=''>
+    <div >
       <div
         className={`flex cursor-pointer items-center justify-between pr-4 leading-10 ${
           pathname === url ? 'text-green-400' : ''
-        } transition-all duration-300`}
-        style={{ paddingLeft: 16 * level + 'px' }}
+        } transition-all duration-300 ${
+          level === 2 && pathname === url ? 'border-l-2 border-green-400' : ''
+        }`}
+        style={{ paddingLeft: 12 * level + 'px' }}
         onClick={() => clickHandler()}
       >
         <Underline offset={-8}>
@@ -86,7 +88,9 @@ export default function NavItem(props: NavItemProps) {
         style={{
           height: (expanded ? subNavheight : 0) + 'px',
         }}
-        className={`overflow-hidden transition-all duration-300`}
+        className={`${
+          level === 1 ? 'ml-[20px]' : ''
+        } overflow-hidden border-l-[1px] transition-all duration-300`}
       >
         {children?.map((subNav) => (
           <NavItem

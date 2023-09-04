@@ -88,6 +88,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <Icon type='close' />
             </div>
           </div>
+          <div className='mb-4 hidden lg:block'></div>
           <Nav beforeJump={beforeJumpHandle} data={navList} />
         </div>
         <div className='flex-1 overflow-auto p-5 lg:pr-[300px]'>
@@ -96,6 +97,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div
           className={`hidden bg-white lg:fixed lg:bottom-0 lg:right-[20px] lg:top-[57px] lg:block lg:w-[280px] lg:border-l-[1px] lg:px-[50px]`}
         >
+          <div className='mb-4 hidden lg:block'></div>
           <ReadmeDir url={pathname} />
         </div>
       </div>
