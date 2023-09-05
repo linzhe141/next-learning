@@ -3,12 +3,14 @@ export type NavItemProps = {
   url: string
   level: number
   expanded: boolean
+  isLink: boolean
   expandChangeHandle?: (nav: NavItemProps) => void
   clickHandle?: (nav: NavItemProps) => void
   children?: NavItemProps[]
   navList?: NavItemProps[]
 }
 export type NavData = {
+  isLink: boolean
   label: string
   url: string
   level?: number

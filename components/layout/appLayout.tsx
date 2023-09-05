@@ -11,6 +11,7 @@ import { useStore } from '@/store/store'
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [showNav, setShowNav] = useState(false)
+  const [showReadmeDir, setShowReadmeDir] = useState(false)
   const navList = useStore((state) => state.navList)
   const pathname = usePathname()
   function closeNav() {
@@ -40,7 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [showNav])
   return (
     <main className='flex h-screen flex-col'>
-      <div className='flex items-center justify-between border-b-[1px] p-4'>
+      <div className='fixed flex w-full items-center justify-between border-b-[1px] bg-white p-4 shadow-md shadow-gray-400'>
         <div>
           <Underline>
             <div
@@ -54,24 +55,61 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 src={'/logo.jpg'}
                 alt='logo'
               />
-              <span>linzhe-blog</span>
+              <span className='font-semibold'>linzhe-blog</span>
             </div>
           </Underline>
         </div>
 
-        <div>
+        <div className='flex items-center'>
           <Underline>
-            <span onClick={() => router.push('/')}>home</span>
+            <span className='font-semibold' onClick={() => router.push('/')}>
+              home
+            </span>
           </Underline>
+          <a
+            className='ml-4 cursor-pointer'
+            href='https://github.com/linzhe141'
+            title='linzhe141 github'
+          >
+            <Icon type='github' />
+          </a>
         </div>
       </div>
-      <div className='flex h-10 items-center overflow-hidden border-b-[1px] px-2 xl:h-0 xl:border-b-0'>
+      <div className='mt-[57px] flex h-10 items-center justify-between overflow-hidden border-b-[1px] px-2 xl:h-0 xl:border-b-0'>
         <div
           className='flex cursor-pointer items-center'
           onClick={() => setShowNav(true)}
         >
           <Icon type='menu' />
           <span className='ml-2'>Menu</span>
+        </div>
+        <div
+          className='flex cursor-pointer items-center'
+          onClick={() => setShowReadmeDir(true)}
+        >
+          <span className='ml-2'>On this page </span>
+          <Icon type='arrow' />
+          <div
+            className={`absolute left-8 right-8 top-[110px] z-10 rounded bg-slate-100 p-4 shadow-md shadow-gray-400 ${
+              showReadmeDir ? 'scale-y-100' : 'scale-0 '
+            } origin-top-right transition-all duration-300`}
+          >
+            <ReadmeDir
+              beforeJump={() => {
+                setShowReadmeDir(false)
+              }}
+              url={pathname}
+            />
+          </div>
+          <div
+            className={`fixed bottom-0 left-0 right-0 top-0 bg-gray-400 bg-opacity-30 transition-all duration-300 ${
+              showReadmeDir ? 'scale-y-100' : 'scale-0'
+            }`}
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowReadmeDir(false)
+            }}
+          ></div>
         </div>
       </div>
       <div className='flex h-0 flex-1 overflow-auto'>
